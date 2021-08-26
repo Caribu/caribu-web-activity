@@ -59,7 +59,7 @@ export const drawLine = (
   if (context) {
     context.strokeStyle = color || "#FF0000";
     context.lineJoin = "round";
-    context.lineWidth = size || 30;
+    context.lineWidth = size || 5;
     context.beginPath();
     context.moveTo(originalPosition.x, originalPosition.y);
     context.lineTo(newPosition.x, newPosition.y);
@@ -93,4 +93,3 @@ export const drawShadedLine = (
     context.stroke();
   }
 };
-

@@ -3,7 +3,9 @@ import _ from "lodash";
 import React from "react";
 import { canvasHeight, canvasWidth } from "./CanvasExamples/CanvasUtils";
 import { useColoredPixels } from "./CanvasExamples/ColoredPixels";
+import { useDotPattern } from "./CanvasExamples/DotPattern";
 import { useFur } from "./CanvasExamples/Fur";
+import { useImagePattern } from "./CanvasExamples/ImagePattern";
 import { useRainbow } from "./CanvasExamples/Rainbow";
 import { useShadows } from "./CanvasExamples/Shadows";
 import { useShapes } from "./CanvasExamples/Shapes";
@@ -22,7 +24,9 @@ const CanvasExample = (props: any) => {
 
   // Examples Hooks
   const coloredPixels = useColoredPixels();
+  const dotPattern = useDotPattern();
   const fur = useFur();
+  const imagePattern = useImagePattern();
   const rainbow = useRainbow();
   const shadows = useShadows();
   const shapes = useShapes();
@@ -53,6 +57,10 @@ const CanvasExample = (props: any) => {
       shapes.startDraw(canvasRef.current, event);
     } else if (_.camelCase(strokeType) === "spray") {
       spray.startDraw(canvasRef.current, event);
+    } else if (_.camelCase(strokeType) === "dotPattern") {
+      dotPattern.startDraw(canvasRef.current, event);
+    } else if (_.camelCase(strokeType) === "imagePattern") {
+      imagePattern.startDraw(canvasRef.current, event);
     }
   };
 
@@ -71,6 +79,10 @@ const CanvasExample = (props: any) => {
       shapes.draw(canvasRef.current, event);
     } else if (_.camelCase(strokeType) === "spray") {
       spray.draw(canvasRef.current, event);
+    } else if (_.camelCase(strokeType) === "dotPattern") {
+      dotPattern.draw(canvasRef.current, event);
+    } else if (_.camelCase(strokeType) === "imagePattern") {
+      imagePattern.draw(canvasRef.current, event);
     }
   };
 
@@ -78,7 +90,7 @@ const CanvasExample = (props: any) => {
     if (_.camelCase(strokeType) === "simplePencil") {
       simplePencil.exitDraw();
     } else if (_.camelCase(strokeType) === "shadows") {
-      shadows.exitDraw();
+      shadows.exitDraw(canvasRef.current);
     } else if (_.camelCase(strokeType) === "coloredPixels") {
       coloredPixels.exitDraw();
     } else if (_.camelCase(strokeType) === "fur") {
@@ -89,6 +101,10 @@ const CanvasExample = (props: any) => {
       shapes.exitDraw();
     } else if (_.camelCase(strokeType) === "spray") {
       spray.exitDraw();
+    } else if (_.camelCase(strokeType) === "dotPattern") {
+      dotPattern.exitDraw(canvasRef.current);
+    } else if (_.camelCase(strokeType) === "imagePattern") {
+      imagePattern.exitDraw(canvasRef.current);
     }
   };
 
@@ -163,6 +179,8 @@ const CanvasExample = (props: any) => {
         >
           Shadows
         </button>
+      </div>
+      <div>
         <button
           onClick={() => {
             setStrokeType("shapes");
@@ -176,6 +194,30 @@ const CanvasExample = (props: any) => {
           }}
         >
           Spray
+        </button>
+        <button
+          onClick={() => {
+            setStrokeType("dotPattern");
+          }}
+        >
+          Dot Pattern
+        </button>
+        <button
+          onClick={() => {
+            setStrokeType("imagePattern");
+          }}
+        >
+          Image Pattern
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            const context = canvasRef.current?.getContext("2d");
+            context.clearRect(0, 0, canvasWidth, canvasHeight);
+          }}
+        >
+          CLEAR
         </button>
         <button
           onClick={() => {

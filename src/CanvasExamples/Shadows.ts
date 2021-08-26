@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { drawShadedLine, getCoordinates, Position } from './CanvasUtils';
+import { useState } from "react";
+import { drawShadedLine, getCoordinates, Position } from "./CanvasUtils";
 
 export function useShadows() {
   const [canDraw, setCanDraw] = useState(false);
@@ -8,6 +8,8 @@ export function useShadows() {
   const startDraw = (canvasRef, event) => {
     const coordinates = getCoordinates(canvasRef, event);
     if (coordinates && coordinates.x && coordinates.y) {
+      const context = canvasRef.getContext("2d");
+      context.save();
       const newX = coordinates.x + 0.1;
       const newY = coordinates.y + 0.1;
       // secondPoint hack, because you can't use drawLine with just 1 point
@@ -28,13 +30,17 @@ export function useShadows() {
     }
   };
 
-  const exitDraw = () => {
+  const exitDraw = (canvasRef?: any) => {
     setCanDraw(false);
+    if (canvasRef) {
+      const context = canvasRef.getContext("2d");
+      context.restore();
+    }
   };
 
   return {
     draw,
     exitDraw,
-    startDraw
+    startDraw,
   };
 }

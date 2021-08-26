@@ -1,25 +1,33 @@
-import { useState } from 'react';
-import { getCoordinates } from './CanvasUtils';
+import { useState } from "react";
+import { getCoordinates } from "./CanvasUtils";
 
 export function useFur() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState<any>([]);
 
   const startDraw = (canvasRef, event) => {
+    const context = canvasRef.getContext("2d");
+    context.save();
     const coordinates = getCoordinates(canvasRef, event);
     setPoints([]);
     setIsDrawing(true);
-    setPoints((currentPoints) => [...currentPoints, { x: coordinates.x, y: coordinates.y }]);
+    setPoints((currentPoints) => [
+      ...currentPoints,
+      { x: coordinates.x, y: coordinates.y },
+    ]);
   };
 
   const draw = (canvasRef, event) => {
     if (isDrawing) {
-      const ctx = canvasRef.getContext('2d');
+      const ctx = canvasRef.getContext("2d");
       const coordinates = getCoordinates(canvasRef, event);
 
       //ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-      setPoints((currentPoints) => [...currentPoints, { x: coordinates.x, y: coordinates.y }]);
+      setPoints((currentPoints) => [
+        ...currentPoints,
+        { x: coordinates.x, y: coordinates.y },
+      ]);
 
       const p1 = points[points.length - 2];
       const p2 = points[points.length - 1];
@@ -39,7 +47,7 @@ export function useFur() {
 
         if (d < 2000 && Math.random() > d / 2000) {
           ctx.beginPath();
-          ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+          ctx.strokeStyle = "rgba(0,0,0,0.3)";
           ctx.moveTo(
             points[points.length - 1].x + dx * 0.5,
             points[points.length - 1].y + dy * 0.5
@@ -54,13 +62,17 @@ export function useFur() {
     }
   };
 
-  const exitDraw = () => {
+  const exitDraw = (canvasRef?: any) => {
     setIsDrawing(false);
+    if (canvasRef) {
+      const context = canvasRef.getContext("2d");
+      context.restore();
+    }
   };
 
   return {
     draw,
     exitDraw,
-    startDraw
+    startDraw,
   };
 }
